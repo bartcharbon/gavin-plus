@@ -82,7 +82,6 @@ public class AssignCompoundHet extends GeneStream
 								geneAlleleToSeenSamples.put(rlv.getGene(), rlv.getAllele(), seenSamples);
 							}
 						}
-
 					}
 				}
 			}
@@ -122,9 +121,7 @@ public class AssignCompoundHet extends GeneStream
 						}
 					}
 				}
-
 			}
 		}
 	}
-
 }

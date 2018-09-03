@@ -18,14 +18,15 @@ public class CGDEntry
 	private String comments;
 	private String interventionOrRationale;
 	private String references;
-	private generalizedInheritance generalizedInheritance; //used for gene inheritance matching!
+	private GeneralizedInheritance generalizedInheritance; //used for gene inheritance matching!
 
-
-	public enum generalizedInheritance {
+	public enum GeneralizedInheritance
+	{
 
 		DOMINANT, RECESSIVE, DOMINANT_OR_RECESSIVE, X_LINKED, BLOODGROUP, OTHER, NOTINCGD;
 
-		public static boolean hasKnownInheritance(generalizedInheritance gi) {
+		public static boolean hasKnownInheritance(GeneralizedInheritance gi)
+		{
 			return (gi == RECESSIVE || gi == DOMINANT || gi == DOMINANT_OR_RECESSIVE || gi == X_LINKED) ? true : false;
 		}
 	}
@@ -132,15 +133,13 @@ public class CGDEntry
 		return references;
 	}
 
-
-
-	public generalizedInheritance getGeneralizedInheritance() {
+	public GeneralizedInheritance getGeneralizedInheritance()
+	{
 		return generalizedInheritance;
 	}
 
-
-
-	public void setGeneralizedInheritance(generalizedInheritance generalizedInheritance) {
+	public void setGeneralizedInheritance(GeneralizedInheritance generalizedInheritance)
+	{
 		this.generalizedInheritance = generalizedInheritance;
 	}
 

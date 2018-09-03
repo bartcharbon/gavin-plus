@@ -16,8 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static org.molgenis.cgd.CGDEntry.generalizedInheritance;
-
 /**
  * Created by joeri on 6/1/16.
  * <p>
@@ -122,7 +120,7 @@ public class MatchVariantsToGenotypeAndInheritance
 
 						// regular inheritance types, recessive and/or dominant or some type, we use affected/carrier because we know how the inheritance acts
 						// females can be X-linked carriers, though since X is inactivated, they might be (partly) affected
-						if (cgd.containsKey(gene) && (generalizedInheritance.hasKnownInheritance(
+						if (cgd.containsKey(gene) && (CGDEntry.GeneralizedInheritance.hasKnownInheritance(
 								cgd.get(gene).getGeneralizedInheritance())))
 						{
 							actingTerminology = Status.AFFECTED;
@@ -229,12 +227,12 @@ public class MatchVariantsToGenotypeAndInheritance
 					HashMap<String, Sample> affected = new HashMap<>();
 
 					CGDEntry ce = cgd.get(gene);
-					generalizedInheritance inheritance =
-							ce != null ? ce.getGeneralizedInheritance() : generalizedInheritance.NOTINCGD;
+					CGDEntry.GeneralizedInheritance inheritance =
+							ce != null ? ce.getGeneralizedInheritance() : CGDEntry.GeneralizedInheritance.NOTINCGD;
 
 					//all dominant types, so no carriers, and only requirement is that genotype contains 1 alt allele somewhere
-					if (inheritance.equals(generalizedInheritance.DOMINANT_OR_RECESSIVE) || inheritance.equals(
-							generalizedInheritance.DOMINANT))
+					if (inheritance.equals(CGDEntry.GeneralizedInheritance.DOMINANT_OR_RECESSIVE) || inheritance.equals(
+							CGDEntry.GeneralizedInheritance.DOMINANT))
 					{
 						// 1 or more, so works for hemizygous too
 						if (genotype.contains(altIndex + ""))
@@ -246,10 +244,11 @@ public class MatchVariantsToGenotypeAndInheritance
 					//all other types, unknown, complex or recessive
 					//for recessive we know if its acting or not, but this is handled in the terminology of a homozygous hit being labeled as 'AFFECTED'
 					//for other (digenic, maternal, YL, etc) and not-in-CGD we don't know, but we still report homozygous as 'acting' and heterozygous as 'carrier' to make that distinction
-					else if (inheritance.equals(generalizedInheritance.RECESSIVE) || inheritance.equals(
-							generalizedInheritance.X_LINKED) || inheritance.equals(generalizedInheritance.OTHER)
-							|| inheritance.equals(generalizedInheritance.NOTINCGD) || inheritance.equals(
-							generalizedInheritance.BLOODGROUP))
+					else if (inheritance.equals(CGDEntry.GeneralizedInheritance.RECESSIVE) || inheritance.equals(
+							CGDEntry.GeneralizedInheritance.X_LINKED) || inheritance.equals(
+							CGDEntry.GeneralizedInheritance.OTHER) || inheritance.equals(
+							CGDEntry.GeneralizedInheritance.NOTINCGD) || inheritance.equals(
+							CGDEntry.GeneralizedInheritance.BLOODGROUP))
 					{
 						boolean homozygous = genotype.equals(altIndex + "/" + altIndex) || genotype.equals(
 								altIndex + "|" + altIndex);

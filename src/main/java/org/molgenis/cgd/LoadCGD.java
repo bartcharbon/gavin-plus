@@ -1,6 +1,6 @@
 package org.molgenis.cgd;
 
-import org.molgenis.cgd.CGDEntry.generalizedInheritance;
+import org.molgenis.cgd.CGDEntry.GeneralizedInheritance;
 
 import java.io.*;
 import java.util.Map;
@@ -59,33 +59,33 @@ public class LoadCGD {
 
 			// TODO JvdV: correctly!!
 
-			generalizedInheritance inherMode = generalizedInheritance.OTHER;
+			CGDEntry.GeneralizedInheritance inherMode = CGDEntry.GeneralizedInheritance.OTHER;
 			if(split[4].contains("AD") && split[4].contains("AR"))
 			{
-				inherMode = generalizedInheritance.DOMINANT_OR_RECESSIVE;
+				inherMode = CGDEntry.GeneralizedInheritance.DOMINANT_OR_RECESSIVE;
 			}
 			else if(split[4].contains("AR"))
 			{
-				inherMode = generalizedInheritance.RECESSIVE;
+				inherMode = CGDEntry.GeneralizedInheritance.RECESSIVE;
 			}
 			else if(split[4].contains("AD"))
 			{
-				inherMode = generalizedInheritance.DOMINANT;
+				inherMode = GeneralizedInheritance.DOMINANT;
 			}
 			else if(split[4].contains("BG"))
 			{
-				inherMode = generalizedInheritance.BLOODGROUP;
+				inherMode = CGDEntry.GeneralizedInheritance.BLOODGROUP;
 			}
 			else if(split[4].contains("XL"))
 			{
-				inherMode = generalizedInheritance.X_LINKED;
+				inherMode = CGDEntry.GeneralizedInheritance.X_LINKED;
 //				if(xlinkedDominantGenes.contains(split[0]))
 //				{
-//					inherMode = generalizedInheritance.XL_DOMINANT;
+				//					inherMode = GeneralizedInheritance.XL_DOMINANT;
 //				}
 //				else
 //				{
-//					inherMode = generalizedInheritance.XL_RECESSIVE;
+				//					inherMode = GeneralizedInheritance.XL_RECESSIVE;
 //				}
 			}
 

@@ -3,6 +3,7 @@ package org.molgenis.data.annotation.makervcf.structs;
 import org.apache.commons.lang3.StringUtils;
 import org.molgenis.data.annotation.core.entity.impl.snpeff.Impact;
 import org.molgenis.data.vcf.datastructures.Sample;
+import org.molgenis.inheritance.model.Pedigree;
 import org.molgenis.vcf.VcfRecord;
 import org.molgenis.vcf.VcfRecordUtils;
 
@@ -202,5 +203,11 @@ public class GavinRecord
 	public String getId()
 	{
 		return VcfRecordUtils.getId(annotatedVcfRecord);
+	}
+
+	public Pedigree getPedigree()
+	{
+		//TODO: implement
+		return null;
 	}
 }
