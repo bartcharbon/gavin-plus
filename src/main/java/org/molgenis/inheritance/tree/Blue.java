@@ -14,12 +14,15 @@ import java.util.List;
 import static org.molgenis.inheritance.Checks.*;
 
 //Two parents both unaffected
-public class Blue
+class Blue
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Blue.class);
 
+	private Blue()
+	{
+	}
 	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
-			Pedigree pedigree, boolean penetrant)
+			Pedigree pedigree)
 	{
 		LOG.debug("Entering 'Blue' filtertree");
 		InheritanceResult result;
@@ -32,7 +35,6 @@ public class Blue
 			else if (Checks.isNonPenetrant())
 			{
 				result = InheritanceResult.create(true, "Bl2");
-				;
 			}
 			else
 			{
@@ -44,23 +46,19 @@ public class Blue
 			if (Checks.isDeNovo(gavinRecord, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl3");
-				;
 			}
 			else if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 			{
 				result = InheritanceResult.create(true, "Bl4");
-				;
 			}
 			else if (Checks.isHomozygote(gavinRecord, pedigree.getMother()) || Checks.isHomozygote(gavinRecord,
 					pedigree.getFather()))
 			{
 				result = InheritanceResult.create(true, "Bl5");
-				;
 			}
 			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl6");
-				;
 			}
 			else
 			{
@@ -74,7 +72,6 @@ public class Blue
 				if (!Checks.subjectHasVariant(gavinRecord, pedigree.getFather()))
 				{
 					result = InheritanceResult.create(true, "Bl7");
-					;
 				}
 				else
 				{
@@ -84,7 +81,6 @@ public class Blue
 			else if (Checks.isDeNovo(gavinRecord, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl8");
-				;
 			}
 			else
 			{
@@ -96,28 +92,23 @@ public class Blue
 			if (Checks.isDeNovo(gavinRecord, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl9");
-				;
 			}
 			else if (Checks.isNonPenetrant())
 			{
 				result = InheritanceResult.create(true, "Bl10");
-				;
 			}
 			else if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 			{
 				result = InheritanceResult.create(true, "Bl11");
-				;
 			}
 			else if (Checks.isHomozygote(gavinRecord, pedigree.getFather()) || Checks.isHomozygote(gavinRecord,
 					pedigree.getMother()))
 			{
 				result = InheritanceResult.create(true, "Bl12");
-				;
 			}
 			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl13");
-				;
 			}
 			else
 			{

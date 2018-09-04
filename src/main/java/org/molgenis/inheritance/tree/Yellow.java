@@ -14,57 +14,62 @@ import java.util.List;
 import static org.molgenis.inheritance.Checks.*;
 
 //One parent, unaffected
-public class Yellow
+class Yellow
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Yellow.class);
 
+	private Yellow()
+	{
+	}
 	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
-			Pedigree pedigree, boolean penetrant)
+			Pedigree pedigree)
 	{
 		Subject parent = pedigree.getFather() != null ? pedigree.getFather() : pedigree.getMother();
 		LOG.debug("Entering 'Yellow' filtertree");
-		InheritanceResult result;
 		if (isDominant(gene))
 		{
 			if (isNonPenetrant())
 			{
-				result = InheritanceResult.create(true, "Yl_1");
+				return InheritanceResult.create(true, "Yl_1");
 			}
 			else if (isDeNovo(gavinRecord, pedigree))
 			{
-				result = InheritanceResult.create(true, "Yl_2");
-				;
+				return InheritanceResult.create(true, "Yl_2");
 			}
 			else
 			{
-				result = IF.filter("YL_IF_1");
+				return IF.filter("YL_IF_1");
 			}
 		}
 		else if (isUnknownInheritanceMode(gene) || isRecessive(gene))
 		{
 			if (isHomozygote(gavinRecord, pedigree.getChild()))
 			{
-				result = InheritanceResult.create(true, "Yl_3");
-				;
+				return InheritanceResult.create(true, "Yl_3");
 			}
-			else if (gavinRecordsForGene.size() > 1)
+			else if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
-				//FIXME: is current variant part of this list
-				if (Checks.subjectHasVariant(gavinRecord, parent) && Checks.subjectHasVariant(
-						gavinRecordsForGene.get(0), parent))
+				for (GavinRecord record : gavinRecordsForGene)
 				{
-					//FIXME how to get the other variant correctly and what if there are three or more
-					result = InheritanceResult.create(true, "Yl_4");
-					;
+					if (!record.equals(gavinRecord))
+					{
+						if (Checks.subjectHasVariant(gavinRecord, parent) && Checks.subjectHasVariant(
+								gavinRecordsForGene.get(0), parent))
+						{
+							//FIXME how to get the other variant correctly and what if there are three or more
+							return InheritanceResult.create(true, "Yl_4");
+						}
+						else
+						{
+							return IF.filter("YL_IF_2");
+						}
+					}
 				}
-				else
-				{
-					result = IF.filter("YL_IF_2");
-				}
+				throw new RuntimeException("No other record than the one under test found!");
 			}
 			else
 			{
-				result = IF.filter("YL_IF_3");
+				return IF.filter("YL_IF_3");
 			}
 		}
 		else if (isXLinked(gene))
@@ -73,40 +78,35 @@ public class Yellow
 			{
 				if (pedigree.getFather().isAffected())
 				{
-					result = InheritanceResult.create(true, "Yl_5");
-					;
+					return InheritanceResult.create(true, "Yl_5");
 				}
 				else if (subjectHasVariant(gavinRecord, pedigree.getFather()))
 				{
-					result = InheritanceResult.create(true, "Yl_6");
-					;
+					return InheritanceResult.create(true, "Yl_6");
 				}
 				else
 				{
-					result = IF.filter("YL_IF_4");
+					return IF.filter("YL_IF_4");
 				}
 			}
 			else
 			{
-				result = IF.filter("YL_IF_5");
+				return IF.filter("YL_IF_5");
 			}
 		}
 		else if (isDominantOrRecessive(gene))
 		{
 			if (isNonPenetrant())
 			{
-				result = InheritanceResult.create(true, "Yl_6");
-				;
+				return InheritanceResult.create(true, "Yl_6");
 			}
 			else if (isDeNovo(gavinRecord, pedigree))
 			{
-				result = InheritanceResult.create(true, "Yl_7");
-				;
+				return InheritanceResult.create(true, "Yl_7");
 			}
 			else if (isHomozygote(gavinRecord, pedigree.getChild()))
 			{
-				result = InheritanceResult.create(true, "Yl8");
-				;
+				return InheritanceResult.create(true, "Yl8");
 			}
 			else if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
@@ -115,23 +115,21 @@ public class Yellow
 						gavinRecordsForGene.get(0), parent))
 				{
 					//FIXME how to get the other variant correctly and what if there are three or more
-					result = InheritanceResult.create(true, "Yl9");
-					;
+					return InheritanceResult.create(true, "Yl9");
 				}
 				else
 				{
-					result = IF.filter("YL_IF_6");
+					return IF.filter("YL_IF_6");
 				}
 			}
 			else
 			{
-				result = IF.filter("YL_IF_7");
+				return IF.filter("YL_IF_7");
 			}
 		}
 		else
 		{
-			result = IF.filter("YL_IF_8");
+			return IF.filter("YL_IF_8");
 		}
-		return result;
 	}
 }

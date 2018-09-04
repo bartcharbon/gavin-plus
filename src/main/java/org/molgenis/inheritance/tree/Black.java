@@ -12,10 +12,13 @@ import java.util.List;
 
 import static org.molgenis.inheritance.Checks.*;
 
-public class Black
+class Black
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Black.class);
 
+	private Black()
+	{
+	}
 	//no parent data available
 	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
 			Pedigree pedigree)

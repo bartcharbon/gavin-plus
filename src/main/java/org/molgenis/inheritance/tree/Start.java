@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class Start
+class Start
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Start.class);
 
@@ -22,38 +22,41 @@ public class Start
 
 		if (pedigree.getMother() != null && pedigree.getFather() == null)
 		{
-			result = filterOneParent(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant, pedigree.getMother());
+			result = filterOneParent(gavinRecord, gavinRecordsForGene, gene, pedigree, pedigree.getMother());
 		}
 		else if (pedigree.getMother() == null && pedigree.getFather() != null)
 		{
-			result = filterOneParent(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant, pedigree.getFather());
+			result = filterOneParent(gavinRecord, gavinRecordsForGene, gene, pedigree, pedigree.getFather());
 		}
 		else if (pedigree.getMother() != null && pedigree.getFather() != null)
 		{
-			result = filterTwoParents(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant);
+			result = filterTwoParents(gavinRecord, gavinRecordsForGene, gene, pedigree);
 		}
 		//both parents null
-		result = Black.filter(gavinRecord, gavinRecordsForGene, gene, pedigree);
+		else
+		{
+			result = Black.filter(gavinRecord, gavinRecordsForGene, gene, pedigree);
+		}
 		return result;
 	}
 
 	private InheritanceResult filterOneParent(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
-			Pedigree pedigree, boolean penetrant, Subject parent)
+			Pedigree pedigree, Subject parent)
 	{
 		InheritanceResult result;
 		if (parent.isAffected())
 		{
-			result = Yellow.filter(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant);
+			result = Yellow.filter(gavinRecord, gavinRecordsForGene, gene, pedigree);
 		}
 		else
 		{
-			result = Green.filter(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant);
+			result = Green.filter(gavinRecord, gavinRecordsForGene, gene, pedigree);
 		}
 		return result;
 	}
 
 	private InheritanceResult filterTwoParents(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene,
-			Gene gene, Pedigree pedigree, boolean penetrant)
+			Gene gene, Pedigree pedigree)
 	{
 		InheritanceResult result;
 		int affectedParents = 0;
@@ -69,11 +72,11 @@ public class Start
 		//Implemented as "at least one parent affected"
 		if (affectedParents > 0)
 		{
-			result = Blue.filter(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant);
+			result = Blue.filter(gavinRecord, gavinRecordsForGene, gene, pedigree);
 		}
 		else
 		{
-			result = Red.filter(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant);
+			result = Red.filter(gavinRecord, gavinRecordsForGene, gene, pedigree);
 		}
 		return result;
 	}

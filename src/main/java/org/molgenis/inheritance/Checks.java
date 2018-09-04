@@ -3,27 +3,26 @@ package org.molgenis.inheritance;
 import org.molgenis.cgd.CGDEntry;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.data.vcf.datastructures.Sample;
+import org.molgenis.inheritance.exception.MultipleSamplesForIdException;
 import org.molgenis.inheritance.model.Gene;
 import org.molgenis.inheritance.model.Pedigree;
 import org.molgenis.inheritance.model.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
 
 public class Checks
 {
-	private static final Logger LOG = LoggerFactory.getLogger(Checks.class);
+	private Checks()
+	{
+	}
+
 	public static boolean isDeNovo(GavinRecord record, Pedigree pedigree)
 	{
-		if (subjectHasVariant(record, pedigree.getFather()) || subjectHasVariant(record, pedigree.getMother()))
-		{
-			return false;
-		}
-		return true;
+		return !subjectHasVariant(record, pedigree.getFather()) || subjectHasVariant(record, pedigree.getMother());
 	}
 
 	public static boolean isNonPenetrant()
@@ -45,27 +44,25 @@ public class Checks
 									 .collect(Collectors.toList());
 		if (samples.size() == 1)
 		{
-			if (samples.get(0).getGenotype().isPresent())
+			Optional<String> genotypeOptional = samples.get(0).getGenotype();
+			if (genotypeOptional.isPresent())
 			{
-				String genotype = samples.get(0).getGenotype().get();
-				if (genotype.equals("1|1") || genotype.equals("1/1"))
-				{//FIXME:other variants of homozygote?
-					return true;
-				}
+				String genotype = genotypeOptional.get();
+				return genotype.equals("1|1") || genotype.equals("1/1");
 			}
 		}
 		else
 		{
 			//This cannot happen in VCF format!
-			new RuntimeException("Multiple samples found!");
+			throw new MultipleSamplesForIdException("Multiple samples found!");
 		}
 		return false;
 	}
 
-	public static boolean isCompound(GavinRecord gavinRecord, List<GavinRecord> gavinRecords, Pedigree pedigree)
+	public static boolean isCompound(List<GavinRecord> gavinRecords, Pedigree pedigree)
 	{
 		//no other variants found in this gene
-		if (gavinRecords.size() == 0) return false;
+		if (gavinRecords.isEmpty()) return false;
 
 		boolean fatherHasVariant = false;
 		boolean motherHasVariant = false;
@@ -100,13 +97,11 @@ public class Checks
 									 .collect(Collectors.toList());
 		if (samples.size() == 1)
 		{
-			if (samples.get(0).getGenotype().isPresent())
+			Optional<String> genotypeOptional = samples.get(0).getGenotype();
+			if (genotypeOptional.isPresent())
 			{
-				String genotype = samples.get(0).getGenotype().get();
-				if (genotype.indexOf("1") != -1)
-				{
-					return true;
-				}
+				String genotype = genotypeOptional.get();
+				return genotype.indexOf('1') != -1;
 			}
 		}
 		return false;

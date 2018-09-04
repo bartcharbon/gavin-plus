@@ -5,10 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //TODO: should this be part of the inheritance?
-public class IF
+class IF
 {
 	private static final Logger LOG = LoggerFactory.getLogger(IF.class);
 
+	private IF()
+	{
+	}
 	public static InheritanceResult filter(String code)
 	{
 		LOG.debug("Entering 'IF' filtertree");

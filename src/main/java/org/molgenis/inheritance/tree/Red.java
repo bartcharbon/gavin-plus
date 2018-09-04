@@ -14,12 +14,15 @@ import java.util.List;
 import static org.molgenis.inheritance.Checks.*;
 
 //Two parents at least one affected
-public class Red
+class Red
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Red.class);
 
+	private Red()
+	{
+	}
 	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
-			Pedigree pedigree, boolean penetrant)
+			Pedigree pedigree)
 	{
 		LOG.debug("Entering 'Red' filtertree");
 		InheritanceResult result;

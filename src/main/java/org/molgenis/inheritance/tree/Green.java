@@ -11,14 +11,18 @@ import java.util.List;
 import static org.molgenis.inheritance.Checks.*;
 
 //One parent, affected
-public class Green
+class Green
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Green.class);
 
+	private Green()
+	{
+	}
 	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
-			Pedigree pedigree, boolean penetrant)
+			Pedigree pedigree)
 	{
 		LOG.debug("Entering 'Green' filtertree");
+
 		InheritanceResult result;
 		Subject parent = pedigree.getFather() != null ? pedigree.getFather() : pedigree.getMother();
 
@@ -31,14 +35,12 @@ public class Green
 			if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 			{
 				result = InheritanceResult.create(true, "Gr2");
-				;
 			}
 			else if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
 				if (!Checks.subjectHasVariant(gavinRecord, parent))
 				{
 					result = InheritanceResult.create(true, "Gr3");
-					;
 				}
 				else
 				{
@@ -55,17 +57,14 @@ public class Green
 			if (pedigree.getChild().getGender() != Gender.MALE)
 			{
 				result = InheritanceResult.create(true, "Gr4");
-				;
 			}
 			else if (parent.getGender() == Gender.MALE && !parent.isAffected())
 			{
 				result = InheritanceResult.create(true, "Gr5");
-				;
 			}
 			else if (!Checks.subjectHasVariant(gavinRecord, parent))
 			{
 				result = InheritanceResult.create(true, "Gr6");
-				;
 			}
 			else
 			{
