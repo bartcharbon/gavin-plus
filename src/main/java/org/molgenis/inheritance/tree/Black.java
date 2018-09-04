@@ -24,33 +24,33 @@ public class Black
 		InheritanceResult result;
 		if (isDominant(gene))
 		{
-			result = InheritanceResult.create(true, "Bck1");
+			result = InheritanceResult.create(true, "Bk1");
 		}
 		else if (isUnknownInheritanceMode(gene) || isRecessive(gene) || isDominantOrRecessive(gene))
 		{
 			if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
-				result = InheritanceResult.create(true, "Bck2");
+				result = InheritanceResult.create(true, "Bk2");
 			}
 			else
 			{
 				if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 				{
-					return InheritanceResult.create(true, "Bck3");
+					return InheritanceResult.create(true, "Bk3");
 				}
 				else
 				{
-					return IF.filter();
+					return IF.filter("Bk_IF_1");
 				}
 			}
 		}
 		else if (isXLinked(gene))
 		{
-			result = InheritanceResult.create(true, "Bck4");
+			result = InheritanceResult.create(true, "Bk4");
 		}
 		else
 		{
-			return IF.filter();
+			return IF.filter("Bk_IF_2");
 		}
 		return result;
 	}

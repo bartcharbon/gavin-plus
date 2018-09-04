@@ -67,11 +67,11 @@ public class Red
 		}
 		else if (isXLinked(gene))
 		{
-			if (PedigreeUtils.getFather(pedigree).isAffected())
+			if (pedigree.getFather().isAffected())
 			{
 				result = InheritanceResult.create(true, "Rd6");
 			}
-			else if (!Checks.subjectHasVariant(gavinRecord, PedigreeUtils.getFather(pedigree)))
+			else if (!Checks.subjectHasVariant(gavinRecord, pedigree.getFather()))
 			{
 				result = InheritanceResult.create(true, "Rd7");
 			}

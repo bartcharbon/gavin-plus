@@ -2,10 +2,10 @@ package org.molgenis.inheritance.tree;
 
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.Checks;
-import org.molgenis.inheritance.PedigreeUtils;
 import org.molgenis.inheritance.model.Gene;
 import org.molgenis.inheritance.model.InheritanceResult;
 import org.molgenis.inheritance.model.Pedigree;
+import org.molgenis.inheritance.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +21,7 @@ public class Yellow
 	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
 			Pedigree pedigree, boolean penetrant)
 	{
+		Subject parent = pedigree.getFather() != null ? pedigree.getFather() : pedigree.getMother();
 		LOG.debug("Entering 'Yellow' filtertree");
 		InheritanceResult result;
 		if (isDominant(gene))
@@ -49,8 +50,8 @@ public class Yellow
 			else if (gavinRecordsForGene.size() > 1)
 			{
 				//FIXME: is current variant part of this list
-				if (Checks.subjectHasVariant(gavinRecord, pedigree.getParents().get(0)) && Checks.subjectHasVariant(
-						gavinRecordsForGene.get(0), pedigree.getParents().get(0)))
+				if (Checks.subjectHasVariant(gavinRecord, parent) && Checks.subjectHasVariant(
+						gavinRecordsForGene.get(0), parent))
 				{
 					//FIXME how to get the other variant correctly and what if there are three or more
 					result = InheritanceResult.create(true, "Yl_4");
@@ -68,14 +69,14 @@ public class Yellow
 		}
 		else if (isXLinked(gene))
 		{
-			if (PedigreeUtils.getFather(pedigree) != null)
+			if (pedigree.getFather() != null)
 			{
-				if (PedigreeUtils.getFather(pedigree).isAffected())
+				if (pedigree.getFather().isAffected())
 				{
 					result = InheritanceResult.create(true, "Yl_5");
 					;
 				}
-				else if (subjectHasVariant(gavinRecord, PedigreeUtils.getFather(pedigree)))
+				else if (subjectHasVariant(gavinRecord, pedigree.getFather()))
 				{
 					result = InheritanceResult.create(true, "Yl_6");
 					;
@@ -110,8 +111,8 @@ public class Yellow
 			else if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
 				//FIXME: is current variant part of this list
-				if (Checks.subjectHasVariant(gavinRecord, pedigree.getParents().get(0)) && Checks.subjectHasVariant(
-						gavinRecordsForGene.get(0), pedigree.getParents().get(0)))
+				if (Checks.subjectHasVariant(gavinRecord, parent) && Checks.subjectHasVariant(
+						gavinRecordsForGene.get(0), parent))
 				{
 					//FIXME how to get the other variant correctly and what if there are three or more
 					result = InheritanceResult.create(true, "Yl9");

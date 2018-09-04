@@ -2,7 +2,6 @@ package org.molgenis.inheritance.tree;
 
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.Checks;
-import org.molgenis.inheritance.PedigreeUtils;
 import org.molgenis.inheritance.model.Gender;
 import org.molgenis.inheritance.model.Gene;
 import org.molgenis.inheritance.model.InheritanceResult;
@@ -52,8 +51,8 @@ public class Blue
 				result = InheritanceResult.create(true, "Bl4");
 				;
 			}
-			else if (Checks.isHomozygote(gavinRecord, pedigree.getParents().get(0)) || Checks.isHomozygote(gavinRecord,
-					pedigree.getParents().get(1)))
+			else if (Checks.isHomozygote(gavinRecord, pedigree.getMother()) || Checks.isHomozygote(gavinRecord,
+					pedigree.getFather()))
 			{
 				result = InheritanceResult.create(true, "Bl5");
 				;
@@ -72,7 +71,7 @@ public class Blue
 		{
 			if (pedigree.getChild().getGender() == Gender.MALE)
 			{
-				if (!Checks.subjectHasVariant(gavinRecord, PedigreeUtils.getFather(pedigree)))
+				if (!Checks.subjectHasVariant(gavinRecord, pedigree.getFather()))
 				{
 					result = InheritanceResult.create(true, "Bl7");
 					;
@@ -109,8 +108,8 @@ public class Blue
 				result = InheritanceResult.create(true, "Bl11");
 				;
 			}
-			else if (Checks.isHomozygote(gavinRecord, pedigree.getParents().get(0)) || Checks.isHomozygote(gavinRecord,
-					pedigree.getParents().get(1)))
+			else if (Checks.isHomozygote(gavinRecord, pedigree.getFather()) || Checks.isHomozygote(gavinRecord,
+					pedigree.getMother()))
 			{
 				result = InheritanceResult.create(true, "Bl12");
 				;

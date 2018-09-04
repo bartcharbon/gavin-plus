@@ -13,19 +13,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
-import static org.molgenis.inheritance.PedigreeUtils.getFather;
 
 public class Checks
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Checks.class);
 	public static boolean isDeNovo(GavinRecord record, Pedigree pedigree)
 	{
-		for (Subject subject : pedigree.getParents())
+		if (subjectHasVariant(record, pedigree.getFather()) || subjectHasVariant(record, pedigree.getMother()))
 		{
-			if (subjectHasVariant(record, subject))
-			{
-				return false;
-			}
+			return false;
 		}
 		return true;
 	}
@@ -86,8 +82,8 @@ public class Checks
 
 		for (GavinRecord record : gavinRecords)
 		{
-			Subject father = getFather(pedigree);
-			Subject mother = getFather(pedigree);
+			Subject father = pedigree.getFather();
+			Subject mother = pedigree.getMother();
 			if (father != null && subjectHasVariant(record, father)) fatherHasVariant = true;
 			if (mother != null && subjectHasVariant(record, mother)) motherHasVariant = true;
 		}

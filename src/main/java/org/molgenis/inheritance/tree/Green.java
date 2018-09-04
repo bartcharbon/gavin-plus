@@ -20,7 +20,7 @@ public class Green
 	{
 		LOG.debug("Entering 'Green' filtertree");
 		InheritanceResult result;
-		Subject parent = pedigree.getParents().get(0);
+		Subject parent = pedigree.getFather() != null ? pedigree.getFather() : pedigree.getMother();
 
 		if (isDominant(gene))
 		{
