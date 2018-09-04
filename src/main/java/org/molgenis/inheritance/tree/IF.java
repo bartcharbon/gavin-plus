@@ -1,27 +1,17 @@
 package org.molgenis.inheritance.tree;
 
+import org.molgenis.inheritance.model.InheritanceResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //TODO: should this be part of the inheritance?
 public class IF
 {
-	public static boolean filter()
-	{
-		return true;//TODO:implement!
-	}
+	private static final Logger LOG = LoggerFactory.getLogger(IF.class);
 
-	public static boolean isTruncating()
-	{//TODO implement!
-		return false;
-	}
-
-	public static boolean isInMvl()
+	public static InheritanceResult filter(String code)
 	{
-		//TODO implement!
-		return false;
-	}
-
-	public static boolean isSpliceVariant()
-	{
-		//TODO implement!
-		return false;
+		LOG.debug("Entering 'IF' filtertree");
+		return InheritanceResult.create(false, code);
 	}
 }

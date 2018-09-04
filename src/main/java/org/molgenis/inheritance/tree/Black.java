@@ -1,38 +1,42 @@
 package org.molgenis.inheritance.tree;
 
-import org.molgenis.cgd.CGDEntry;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.Checks;
 import org.molgenis.inheritance.model.Gene;
+import org.molgenis.inheritance.model.InheritanceResult;
 import org.molgenis.inheritance.model.Pedigree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
+import static org.molgenis.inheritance.Checks.*;
 
 public class Black
 {
+	private static final Logger LOG = LoggerFactory.getLogger(Black.class);
+
 	//no parent data available
-	public static boolean filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
+	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
 			Pedigree pedigree)
 	{
-		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
-		boolean result = true;
-		if (inheritance == DOMINANT)
+		LOG.debug("Entering 'Black' filtertree");
+		InheritanceResult result;
+		if (isDominant(gene))
 		{
-			result = true;
+			result = InheritanceResult.create(true, "Bck1");
 		}
-		else if (inheritance == NOTINCGD || inheritance == RECESSIVE || inheritance == DOMINANT_OR_RECESSIVE)
+		else if (isUnknownInheritanceMode(gene) || isRecessive(gene) || isDominantOrRecessive(gene))
 		{
-			if (gavinRecordsForGene.size() > 1)
+			if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Bck2");
 			}
 			else
 			{
 				if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 				{
-					return true;
+					return InheritanceResult.create(true, "Bck3");
 				}
 				else
 				{
@@ -40,9 +44,13 @@ public class Black
 				}
 			}
 		}
-		else if (inheritance == X_LINKED)
+		else if (isXLinked(gene))
 		{
-			result = true;
+			result = InheritanceResult.create(true, "Bck4");
+		}
+		else
+		{
+			return IF.filter();
 		}
 		return result;
 	}

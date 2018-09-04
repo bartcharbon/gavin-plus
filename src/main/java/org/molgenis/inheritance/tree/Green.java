@@ -1,74 +1,80 @@
 package org.molgenis.inheritance.tree;
 
-import org.molgenis.cgd.CGDEntry;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.Checks;
-import org.molgenis.inheritance.model.Gender;
-import org.molgenis.inheritance.model.Gene;
-import org.molgenis.inheritance.model.Pedigree;
-import org.molgenis.inheritance.model.Subject;
+import org.molgenis.inheritance.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
+import static org.molgenis.inheritance.Checks.*;
 
 //One parent, affected
 public class Green
 {
-	public static boolean filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
+	private static final Logger LOG = LoggerFactory.getLogger(Green.class);
+
+	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
 			Pedigree pedigree, boolean penetrant)
 	{
-		boolean result;
+		LOG.debug("Entering 'Green' filtertree");
+		InheritanceResult result;
 		Subject parent = pedigree.getParents().get(0);
-		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
-		if (inheritance == DOMINANT)
+
+		if (isDominant(gene))
 		{
-			result = true;
+			result = InheritanceResult.create(true, "Gr1");
 		}
-		else if (inheritance == NOTINCGD || inheritance == RECESSIVE || inheritance == DOMINANT_OR_RECESSIVE)
+		else if (isUnknownInheritanceMode(gene) || isRecessive(gene) || isDominantOrRecessive(gene))
 		{
 			if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Gr2");
+				;
 			}
-			else if (gene.getNrOfVariants() > 0)
+			else if (isMultipleVariantsInOneGene(gavinRecordsForGene))
 			{
 				if (!Checks.subjectHasVariant(gavinRecord, parent))
 				{
-					result = true;
+					result = InheritanceResult.create(true, "Gr3");
+					;
 				}
 				else
 				{
-					result = IF.filter();
+					result = IF.filter("Gr_IF_1");
 				}
 			}
 			else
 			{
-				result = IF.filter();
+				result = IF.filter("Gr_IF_2");
 			}
 		}
-		else if (inheritance == X_LINKED)
+		else if (isXLinked(gene))
 		{
 			if (pedigree.getChild().getGender() != Gender.MALE)
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Gr4");
+				;
 			}
 			else if (parent.getGender() == Gender.MALE && !parent.isAffected())
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Gr5");
+				;
 			}
 			else if (!Checks.subjectHasVariant(gavinRecord, parent))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Gr6");
+				;
 			}
 			else
 			{
-				result = IF.filter();
+				result = IF.filter("Gr_IF_3");
 			}
 		}
 		else
 		{
-			result = IF.filter();
+			result = IF.filter("Gr_IF_4");
 		}
 		return result;
 	}

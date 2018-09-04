@@ -1,114 +1,122 @@
 package org.molgenis.inheritance.tree;
 
-import org.molgenis.cgd.CGDEntry;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.Checks;
 import org.molgenis.inheritance.PedigreeUtils;
 import org.molgenis.inheritance.model.Gene;
+import org.molgenis.inheritance.model.InheritanceResult;
 import org.molgenis.inheritance.model.Pedigree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
+import static org.molgenis.inheritance.Checks.*;
 
 //Two parents at least one affected
 public class Red
 {
-	public static boolean filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
+	private static final Logger LOG = LoggerFactory.getLogger(Red.class);
+
+	public static InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
 			Pedigree pedigree, boolean penetrant)
 	{
-		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
-		boolean result = true;
-		if (inheritance == DOMINANT)
+		LOG.debug("Entering 'Red' filtertree");
+		InheritanceResult result;
+		if (isDominant(gene))
 		{
 			if (Checks.isDeNovo(gavinRecord, pedigree))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd1");
 			}
 			else if (Checks.isNonPenetrant())
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd2");
 			}
 			else if (Checks.isOccuringInAffectedParent(gavinRecord, pedigree))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd3");
 			}
 			else
 			{
-				result = IF.filter();
+				result = IF.filter("Rd_IF_1");
 			}
 
 		}
-		else if (inheritance == NOTINCGD || inheritance == RECESSIVE)
+		else if (isUnknownInheritanceMode(gene) || isRecessive(gene))
 		{
 			if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 			{
 				if (!Checks.isHomozygote(gavinRecord, PedigreeUtils.getUnaffectedParent(pedigree)))
 				{
-					result = true;
+					result = InheritanceResult.create(true, "Rd4");
 				}
 				else
 				{
-					result = IF.filter();
+					result = IF.filter("Rd_IF_2");
 				}
 			}
 			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd5");
 			}
 			else
 			{
-				result = IF.filter();
+				result = IF.filter("Rd_IF_3");
 			}
 		}
-		else if (inheritance == X_LINKED)
+		else if (isXLinked(gene))
 		{
 			if (PedigreeUtils.getFather(pedigree).isAffected())
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd6");
 			}
 			else if (!Checks.subjectHasVariant(gavinRecord, PedigreeUtils.getFather(pedigree)))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd7");
 			}
 			else
 			{
-				result = IF.filter();
+				result = IF.filter("Rd_IF_4");
 			}
 		}
-		else if (inheritance == DOMINANT_OR_RECESSIVE)
+		else if (isDominantOrRecessive(gene))
 		{
 			if (Checks.isDeNovo(gavinRecord, pedigree))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd8");
 			}
 			else if (Checks.isNonPenetrant())
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd9");
 			}
 			else if (Checks.isOccuringInAffectedParent(gavinRecord, pedigree))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd10");
 			}
 			else if (Checks.isHomozygote(gavinRecord, pedigree.getChild()))
 			{
 				if (!Checks.isHomozygote(gavinRecord, PedigreeUtils.getUnaffectedParent(pedigree)))
 				{
-					result = true;
+					result = InheritanceResult.create(true, "Rd11");
 				}
 				else
 				{
-					result = IF.filter();
+					result = IF.filter("Rd_IF_5");
 				}
 			}
 			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
 			{
-				result = true;
+				result = InheritanceResult.create(true, "Rd12");
 			}
 			else
 			{
-				result = IF.filter();
+				result = IF.filter("Rd_IF_6");
 			}
+		}
+		else
+		{
+			result = IF.filter("Rd_IF_7");
 		}
 		return result;
 	}

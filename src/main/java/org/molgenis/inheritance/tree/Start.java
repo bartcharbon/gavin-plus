@@ -2,18 +2,25 @@ package org.molgenis.inheritance.tree;
 
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.model.Gene;
+import org.molgenis.inheritance.model.InheritanceResult;
 import org.molgenis.inheritance.model.Pedigree;
 import org.molgenis.inheritance.model.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class Start
 {
-	public boolean filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene, Pedigree pedigree,
+	private static final Logger LOG = LoggerFactory.getLogger(Start.class);
+
+	public InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
+			Pedigree pedigree,
 			boolean penetrant)
 	{
+		LOG.debug("Starting filtertree");
 		int nrOfParents = pedigree.getParents().size();
-		boolean result;
+		InheritanceResult result;
 		switch (nrOfParents)
 		{
 			case 0:
@@ -31,11 +38,11 @@ public class Start
 		return result;
 	}
 
-	private boolean filterOneParent(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
+	private InheritanceResult filterOneParent(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
 			Pedigree pedigree, boolean penetrant)
 	{
 		Subject parent = pedigree.getParents().get(0);
-		boolean result;
+		InheritanceResult result;
 		if (parent.isAffected())
 		{
 			result = Yellow.filter(gavinRecord, gavinRecordsForGene, gene, pedigree, penetrant);
@@ -47,10 +54,11 @@ public class Start
 		return result;
 	}
 
-	private boolean filterTwoParents(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
+	private InheritanceResult filterTwoParents(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene,
+			Gene gene,
 			Pedigree pedigree, boolean penetrant)
 	{
-		boolean result;
+		InheritanceResult result;
 		int affectedParents = 0;
 		for (Subject parent : pedigree.getParents())
 		{

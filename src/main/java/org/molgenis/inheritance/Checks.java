@@ -1,17 +1,23 @@
 package org.molgenis.inheritance;
 
+import org.molgenis.cgd.CGDEntry;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.data.vcf.datastructures.Sample;
+import org.molgenis.inheritance.model.Gene;
 import org.molgenis.inheritance.model.Pedigree;
 import org.molgenis.inheritance.model.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
 import static org.molgenis.inheritance.PedigreeUtils.getFather;
 
 public class Checks
 {
+	private static final Logger LOG = LoggerFactory.getLogger(Checks.class);
 	public static boolean isDeNovo(GavinRecord record, Pedigree pedigree)
 	{
 		for (Subject subject : pedigree.getParents())
@@ -108,5 +114,40 @@ public class Checks
 			}
 		}
 		return false;
+	}
+
+	public static boolean isDominantOrRecessive(Gene gene)
+	{
+		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
+		return inheritance == DOMINANT_OR_RECESSIVE;
+	}
+
+	public static boolean isRecessive(Gene gene)
+	{
+		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
+		return inheritance == RECESSIVE;
+	}
+
+	public static boolean isUnknownInheritanceMode(Gene gene)
+	{
+		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
+		return inheritance == NOTINCGD;
+	}
+
+	public static boolean isDominant(Gene gene)
+	{
+		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
+		return inheritance == DOMINANT;
+	}
+
+	public static boolean isXLinked(Gene gene)
+	{
+		CGDEntry.GeneralizedInheritance inheritance = gene.getCgd().getGeneralizedInheritance();
+		return inheritance == X_LINKED;
+	}
+
+	public static boolean isMultipleVariantsInOneGene(List<GavinRecord> records)
+	{
+		return records.size() > 1;
 	}
 }
