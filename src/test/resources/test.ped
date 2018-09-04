@@ -1,0 +1,8 @@
+#Family	Subject	Father	Mother	Sex	Affected
+fictief	jan	piet	gerda	1	2
+fictief	piet			1	1
+fictief	gerda			2	2
+geit	gerda	jan	jannie	2	2
+geit	jan			1	2
+geit	jannie			2	1
+geit	karel	jan	jannie	1	1

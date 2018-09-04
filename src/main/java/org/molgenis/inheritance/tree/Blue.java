@@ -56,7 +56,7 @@ class Blue
 			{
 				result = InheritanceResult.create(true, "Bl5");
 			}
-			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
+			else if (Checks.isCompound(gavinRecordsForGene, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl6");
 			}
@@ -106,7 +106,7 @@ class Blue
 			{
 				result = InheritanceResult.create(true, "Bl12");
 			}
-			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
+			else if (Checks.isCompound(gavinRecordsForGene, pedigree))
 			{
 				result = InheritanceResult.create(true, "Bl13");
 			}

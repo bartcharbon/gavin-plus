@@ -59,7 +59,7 @@ class Red
 					result = IF.filter("Rd_IF_2");
 				}
 			}
-			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
+			else if (Checks.isCompound(gavinRecordsForGene, pedigree))
 			{
 				result = InheritanceResult.create(true, "Rd5");
 			}
@@ -108,7 +108,7 @@ class Red
 					result = IF.filter("Rd_IF_5");
 				}
 			}
-			else if (Checks.isCompound(gavinRecord, gavinRecordsForGene, pedigree))
+			else if (Checks.isCompound(gavinRecordsForGene, pedigree))
 			{
 				result = InheritanceResult.create(true, "Rd12");
 			}
