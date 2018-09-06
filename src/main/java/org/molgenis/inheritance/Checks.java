@@ -1,5 +1,14 @@
 package org.molgenis.inheritance;
 
+import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.DOMINANT;
+import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.DOMINANT_OR_RECESSIVE;
+import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.NOTINCGD;
+import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.RECESSIVE;
+import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.X_LINKED;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.molgenis.cgd.CGDEntry;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.data.vcf.datastructures.Sample;
@@ -7,12 +16,6 @@ import org.molgenis.inheritance.exception.MultipleSamplesForIdException;
 import org.molgenis.inheritance.model.Gene;
 import org.molgenis.inheritance.model.Pedigree;
 import org.molgenis.inheritance.model.Subject;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.molgenis.cgd.CGDEntry.GeneralizedInheritance.*;
 
 public class Checks
 {
@@ -50,12 +53,16 @@ public class Checks
 				String genotype = genotypeOptional.get();
 				return genotype.equals("1|1") || genotype.equals("1/1");
 			}
-		}
-		else
+		} else if (samples.size() > 1)
 		{
 			//This cannot happen in VCF format!
-			throw new MultipleSamplesForIdException("Multiple samples found!");
+			throw new MultipleSamplesForIdException(
+					String.format("Multiple samples found for Sample ID [%s]", subject.getSampleId()));
+		} else {
+			throw new MultipleSamplesForIdException(
+					String.format("No samples found for Sample ID [%s]", subject.getSampleId()));
 		}
+
 		return false;
 	}
 
