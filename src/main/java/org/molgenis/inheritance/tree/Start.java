@@ -1,5 +1,6 @@
 package org.molgenis.inheritance.tree;
 
+import java.util.List;
 import org.molgenis.data.annotation.makervcf.structs.GavinRecord;
 import org.molgenis.inheritance.model.Gene;
 import org.molgenis.inheritance.model.InheritanceResult;
@@ -8,14 +9,12 @@ import org.molgenis.inheritance.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-class Start
+public class Start
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Start.class);
 
 	public InheritanceResult filter(GavinRecord gavinRecord, List<GavinRecord> gavinRecordsForGene, Gene gene,
-			Pedigree pedigree, boolean penetrant)
+      Pedigree pedigree)
 	{
 		LOG.debug("Starting filtertree");
 		InheritanceResult result;
